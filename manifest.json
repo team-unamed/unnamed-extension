@@ -11,7 +11,7 @@
     "permissions": ["sidePanel", "tabs"],
     "content_scripts":[
         {
-        "js":["./content-scripts/index.js"],
+        "js":["main.js"],
         "matches":[
             "https://remix.ethereum.org/*"
         ]
