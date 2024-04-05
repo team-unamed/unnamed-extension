@@ -1,14 +1,13 @@
 {
     "manifest_version": 3,
-    "name": "Site-specific side panel",
+    "name": "Unnamed extension",
     "version": "1.0",
-    "description": "Shows how to display the side panel only on google.com using the Side Panel API.",
+    "description": "Ai assistant for Remix IDE",
     "action": {
       "default_title": "Unnamed AI",
       "default_popup": "popup.html"
 
     },
-    "permissions": ["sidePanel", "tabs"],
     "content_scripts":[
         {
         "js":["main.js"],
