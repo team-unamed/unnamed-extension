@@ -1,20 +1,14 @@
 const showdown = require('showdown');
 const converter = new showdown.Converter();
-require('dotenv').config();
 
 let s, p;
 let header;
 let goBtn;
 
-
-
-
-
+const apiKey='VGhlIEdvYXQgaXMgV2VsbCBtYW5uZXJlZA=='
 let inputField, chatContainer, plugin;
 const btn = () => {
-
-
-        console.log(s);
+        //adding button to the side panel
         const parent_div = document.createElement('div');
         parent_div.classList.add('d-flex');
         parent_div.classList.add('py-1');
@@ -35,24 +29,20 @@ const btn = () => {
         i.src = "https://icones.pro/wp-content/uploads/2021/05/icone-de-chat-violet.png";
 
         child_div.appendChild(i);
-        console.log(parent_div);
         if (s === null) alert("Refresh page");
         else s.appendChild(parent_div);
+        //onclick functionality for button
         parent_div.onclick = promptPanel;
 }
 
 const promptPanel = () => {
-        console.log(p.childNodes, "Array");
+        //make other plugin side panel hidden
         p.childNodes.forEach(element => {
                 if (element.classList.value === "plugItIn active") {
                         element.classList.value = "d-none";
                 }
                 console.log(element.classList.value);
         });
-        // p=Array.prototype.slice.call(p);
-        // console.log(p,"Array");
-        // Create a chat container div
-
         const style = document.createElement('style');
         style.innerHTML = `
         .chat-container {
@@ -61,6 +51,7 @@ const promptPanel = () => {
                 background-color: #222336;
                 color: white;
                 border-radius: 5px;
+                font-size:120%;
             }
     
             /* Individual message styles */
@@ -103,15 +94,10 @@ const promptPanel = () => {
               }
         `;
 
-
         document.head.appendChild(style);
         chatContainer = document.createElement('div');
         chatContainer.classList.add('chat-container');
-
-        // Create individual message divs
-
-
-
+        //checking if the api is working
         fetch('https://unamed-ai-api.vercel.app/')
                 .then(res => {
                         console.log("Working");
@@ -119,19 +105,15 @@ const promptPanel = () => {
                 .catch(err => {
                         console.log(err);
                 })
+        //initial messages in the panel
         const message1 = document.createElement('div');
         message1.classList.add('message');
         message1.textContent = 'Unnamed: ';
 
-        // const message2 = document.createElement('div');
-        // message2.classList.add('message');
         const message2 = createMessage("Unnamed: How can I help you!");
 
-        // Append messages to the chat container
-        // chatContainer.appendChild(message1);
         chatContainer.appendChild(message2);
-
-        // Create an input field
+        //creating input field and Go button
         goBtn = document.createElement('button');
         goBtn.innerHTML = 'Go';
         goBtn.onclick = promptGiven;
@@ -139,16 +121,13 @@ const promptPanel = () => {
         inputField = document.createElement('input');
         inputField.type = 'text';
         inputField.classList.add('input-field');
-        inputField.placeholder = "Ask anything — use '@' to mention code blocks";
-        inputField.appendChild(goBtn);
-
-
+        inputField.placeholder = "Ask anything to Unnamed";
+        
         const prompt = document.createElement('div');
         prompt.appendChild(inputField);
-        //prompt.appendChild(goBtn);
         prompt.classList.add('input-field');
         // Append the chat container and input field to the body
-        header.innerHTML = "Hello";
+        header.innerHTML = "Unnamed";
         plugin = document.createElement('div');
         plugin.classList.add('plugItIn');
         plugin.classList.add('active');
@@ -156,7 +135,6 @@ const promptPanel = () => {
         plugin.appendChild(inputField);
         plugin.appendChild(goBtn);
         p.appendChild(plugin);
-        console.log(plugin);
 
 }
 
@@ -166,7 +144,7 @@ const promptGiven = async () => {
         chatContainer.appendChild(message);
 
         let ans;
-        console.log(process.env.API_KEY);
+        //fetching answer from api
         await fetch(`https://unamed-ai-api.vercel.app/ask?question=${inputField.value}&model=solidity&master_key=${apiKey}`, {
                 method: 'POST',
         })
@@ -182,16 +160,10 @@ const promptGiven = async () => {
                 })
                 .then((data) => {
                         // Handle the JSON response data
-                        console.log(data.answer);
+                        //checking if response has code in it
                         var regex = /```([^`]*)```/;
                         var match = regex.exec(data.answer);
                         var extractedText = match ? match[1].trim() : '';
-
-
-                        if (extractedText) {
-                                console.log(extractedText);
-                        }
-
                         ans = data.answer;
                         let ans_message = createMessage("Unnamed: " + ans, extractedText);
                         chatContainer.appendChild(ans_message);
@@ -201,26 +173,18 @@ const promptGiven = async () => {
                         console.log(err);
                 });
 
-
-
-        // console.log(plugin.childNodes[0]);//=chatContainer;
         plugin.childNodes[1] = inputField;
         plugin.childNodes[2] = goBtn;
-        console.log(chatContainer);
-        console.log(plugin.childNodes);
         inputField.value = "";
 }
 
-
+//fucntion to create message according to string and code
 const createMessage = (value, code) => {
         let message;
         if (code) {
                 message = document.createElement('span');
                 const m = document.createElement('span');
-                //m.textContent=value;
                 message.classList.add('message');
-                message.markdown = "1";
-                //message.appendChild(m);
                 message.innerHTML = converter.makeHtml(value);
                 const copyButton = document.createElement('button');
                 copyButton.innerHTML = 'Copy Code';
@@ -233,38 +197,26 @@ const createMessage = (value, code) => {
         else {
                 message = document.createElement('span');
                 const m = document.createElement('span');
-                //m.textContent=value;
                 message.classList.add('message');
-                message.markdown = "1";
-                //message.appendChild(m);
                 message.innerHTML = converter.makeHtml(value);
         }
         return message;
 }
 
-{/* <div class="d-flex py-1" style="width: auto; place-content: center;">
-        <div class="remixui_icon m-0  pt-1" plugin="udapp" data-id="verticalIconsKindudapp" id="verticalIconsKindudapp">
-                <img data-id="" class="invert dark remixui_image " src="assets/img/deployAndRun.webp" alt="udapp">
-        </div>
-</div> */}
-
+//used this to add button to side panel only  after it is loaded
 var getS = function (call_back) {
         setTimeout(function () {
                 s = document.getElementById("otherIcons");
                 p = document.getElementsByClassName("pluginsContainer")[0].firstChild;
-                header = document.getElementById("side-panel").firstChild.childNodes[1].firstChild.firstChild;
-                console.log(header.innerHTML);
-                console.log(s, "in timeout");
-                // const scriptElement = document.createElement('script');
-                // scriptElement.src = 'https://cdn.jsdelivr.net/npm/marked/script.min.js';
-                // document.head.appendChild(scriptElement);
-                //console.log(process.env.API_KEY)
-                console.log(p);
+                header = document.getElementById("side-panel").firstChild.childNodes[1];
+                if(!header){
+                        alert("Refresh page");
+                }
+                header=header.firstChild.firstChild;
                 call_back();
         }, 2000);
 };
-// code
-console.log("before");
+
 getS(btn);
 
 
