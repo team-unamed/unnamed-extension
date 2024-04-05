@@ -5,7 +5,6 @@ let s, p;
 let header;
 let goBtn;
 
-const apiKey='VGhlIEdvYXQgaXMgV2VsbCBtYW5uZXJlZA=='
 let inputField, chatContainer, plugin;
 const btn = () => {
         //adding button to the side panel
