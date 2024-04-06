@@ -41,3 +41,6 @@ The Unnamed Chrome Extension enhances your coding experience on Remix IDE by pro
 2. **Activate Extension**: The extension will automatically activate when you open Remix IDE, and you'll start benefiting from its features right away.
 
 3. **Chat Icon**: A chat icon would appear in the plugin panel of your Remix IDE, click on it and find your Unnamed Assistant.
+
+### License
+This project is licensed under the [MIT License](LICENSE).
